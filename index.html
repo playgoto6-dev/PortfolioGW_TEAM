@@ -1,0 +1,370 @@
+<!DOCTYPE html><html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Портфолио аниматоров</title>
+  <style>
+    :root {
+      --bg: #000;
+      --card: #0b0b0b;
+      --muted: #9aa0a6;
+      --text: #fff;
+      --accent: #60a5fa;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 16px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      min-height: 100vh;
+    }
+    header h1 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 40px);
+      letter-spacing: .3px;
+    }
+    header p { color: var(--muted); margin: 6px 0 0; }.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .8s ease, transform .8s ease, box-shadow .2s ease;
+}
+.card.show { opacity: 1; transform: translateY(0); }
+.card:hover { box-shadow: 0 14px 40px rgba(0,0,0,.55); }
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  color: var(--accent);
+  word-break: break-word;
+}
+.title:hover { text-decoration: underline; }
+
+.media {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.media img, .media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Простая галерея внутри карточки: горизонтальная прокрутка, если медиа > 1 */
+.gallery {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.gallery > .media { min-width: 100%; scroll-snap-align: start; }
+
+.desc { color: var(--muted); font-size: 14px; line-height: 1.4; }
+
+footer {
+  margin-top: auto;
+  padding-top: 16px;
+  color: var(--muted);
+  border-top: 1px solid #151515;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Портфолио аниматоров</h1>
+      <p>Портфолио аниматоров из GW team,основатель этой команды ГРЭЙС ( 👇пролистните ниже👇 ).</p>
+      </div>
+    </header><main class="grid" id="grid"></main>
+
+<footer>
+  <span>Подробней об участниках:&nbsp;</span>
+  <a href="https://t.me/gwteamport" target="_blank" rel="noopener">Портфолио</a>
+</footer>
+
+  </div>  <script>
+    // ==========
+    // ДАННЫЕ
+    // ==========
+    // Просто добавляй объекты в массив ниже, чтобы создать новые окна/карточки.
+    // Для media используй массив объектов вида { type: 'image'|'video', src: '...' }
+    const items = [
+      {
+        title: 'KLORPLAY',
+        link: 'https:t.me/klorplay',
+        media: [
+          { type: 'image', src: 'image1.jpeg' }, 
+          { type: 'image', src: 'image2.png' }
+        ],
+        description: 'Скин Minecraft формат WIDE и SLIM для женский персонажей - Цена: 150₽.'
+      },
+      {
+        title: 'DELETE',
+        link: 'https:t.me/B4eck',
+        media: [
+          { type: 'image', src: 'image60.jpg' }, 
+          { type: 'image', src: 'image59.jpg' }, 
+          { type: 'image', src: 'image61.jpg' }, 
+          { type: 'video', src: 'image58.mp4' }
+        ],
+        description: 'Арт - 100₽, Превья - 150₽, анимация (10 секунд) - 100₽.'
+      },
+      {
+        title: 'LIGHT',
+        link: 'https:t.me/TheLightYT',
+        media: [
+          { type: 'image', src: 'image57.jpg' },
+          { type: 'image', src: 'image56.jpg' }
+        ],
+        description: 'Лëгкий скин - 100₽, Качественный скин — 150₽.'
+      },
+      {
+        title: 'Хэштег', link: 'https:t.me/Heshteg_TG',
+        media: [
+          { type: 'image', src: 'image55.jpg' },
+          { type: 'image', src: 'image54.jpg' }, 
+          { type: 'image', src: 'image53.jpg' }, 
+          { type: 'image', src: 'image52.jpg' }, 
+          { type: 'video', src: 'image62.mp4' }
+        ],
+        description: 'Арты: Лëгкий арт - 50₽, Сложный арт - 150₽, анимация(10 секунд) - 100₽.'
+      },
+      {
+        title: 'БИН', link: 'https://youtube.com/@binanimations?si=1bq47HpGsTcLFQ7O',
+        media: [
+        { type: 'image', src: 'image51.jpg' }, 
+          { type: 'image', src: 'image50.jpg' }, 
+          { type: 'image', src: 'image49.jpg' }, 
+          { type: 'image', src: 'image48.jpg' }, 
+          { type: 'video', src: 'image63.mp4' }
+        ],
+        description: 'анимация (5 секунд) - 500₽, Рендер - 350₽, Аватарка - 200₽, Превью - 250₽, Шапка Канала - 600₽, Лого - 200₽.'
+      },
+      {
+        title: 'Арслан Mars', link: 'https:t.me/arslan_mars_102830',
+        media: [
+          { type: 'image', src: 'image8.jpg' }, 
+          { type: 'image', src: 'image7.jpg' }, 
+          { type: 'image', src: 'image6.jpg' }, 
+          { type: 'image', src: 'image5.jpg' }, 
+          { type: 'image', src: 'image4.jpg' }, 
+          { type: 'image', src: 'image3.jpg' }, 
+          { type: 'image', src: 'image2.jpg' }, 
+          { type: 'image', src: 'image1.jpg' }, 
+          { type: 'video', src: 'image0.mp4' }, 
+          { type: 'video', src: 'image01.mp4' }
+        ],
+        description: 'Рендеры: 100₽ - 150₽, Анимация (10 секунд) - 250₽, Модельки и скины: 300 - 400₽.'
+      },
+      {
+        title: 'MrDosh', link: 'https:t.me/mrdosh_original',
+        media: [
+          { type: 'video', src: 'image47.mp4' }, 
+          { type: 'image', src: 'image46.jpg' }, 
+          { type: 'image', src: 'image45.jpg' }, 
+          { type: 'video', src: 'image44.mp4' }, 
+          { type: 'video', src: 'image43.mp4' }
+        ],
+        description: '.'
+      },
+      {
+        title: 'ШЕЙХОАА', link: 'https://t.me/sheyhooos',
+        media: [
+          { type: 'image', src: 'image42.jpg' }, 
+          { type: 'image', src: 'image41.jpg' }, 
+          { type: 'image', src: 'image40.jpg' }, 
+          { type: 'image', src: 'image39.jpg' }, 
+          { type: 'image', src: 'image38.jpg' }, 
+          { type: 'image', src: 'image37.jpg' }, 
+          { type: 'image', src: 'image36.jpg' }, 
+          { type: 'image', src: 'image35.jpg' }, 
+          { type: 'image', src: 'image34.jpg' }
+        ],
+        description: 'Арты - 200₽, Карта в майнкрафт Bedrock Edition: 200 - 500₽, Скин - 200₽, Улучшить скин - 150₽.'
+      },
+      {
+        title: 'КИТИКОКС', link: 'https:t.me/kitekokchanel',
+        media: [
+          { type: 'image', src: 'image33.jpg' }, 
+          { type: 'image', src: 'image32.jpg' }, 
+          { type: 'image', src: 'image31.jpg' },
+          { type: 'image', src: 'image30.jpg' }, 
+          { type: 'image', src: 'image29.jpg' }, 
+          { type: 'image', src: 'image28.jpg' }, 
+          { type: 'image', src: 'image27.jpg' }, 
+          { type: 'image', src: 'image26.jpg' }, 
+          { type: 'image', src: 'image25.jpg' }, 
+          { type: 'image', src: 'image24.jpg' }
+        ],
+        description: 'Скин с нуля: 50 - 150₽ ( в зависимости от сложности ), Решейд Скина - 100₽.'
+      },
+      {
+        title: 'Dishka', link: 'https:t.me/dishka_eblan',
+        media: [
+          { type: 'image', src: 'image23.jpg' }, 
+          { type: 'image', src: 'image22.jpg' }, 
+          { type: 'image', src: 'image21.jpg' }, 
+          { type: 'image', src: 'image20.jpg' }, 
+          { type: 'image', src: 'image19.jpg' }, 
+          { type: 'image', src: 'image18.jpg' }, 
+          { type: 'image', src: 'image17.jpg' }, 
+          { type: 'image', src: 'image16.jpg' }, 
+          { type: 'image', src: 'image15.jpg' }, 
+          { type: 'image', src: 'image14.jpg' }
+        ],
+        description: 'Скин с нуля - 200-300 рублей (в зависимости от сложности), Скин 128/128 - 500-600 рублей, Решейд или костюм - 100-200 рублей.'
+      },
+      {
+        title: 'Orbit', link: 'https:t.me/budniorbita',
+        media: [
+          { type: 'image', src: 'image13.jpg' }, 
+          { type: 'image', src: 'image12.jpg' }, 
+          { type: 'image', src: 'image11.jpg' }, 
+          { type: 'image', src: 'image10.jpg' }, 
+          { type: 'image', src: 'image9.jpg' }
+        ],
+        description: 'Скин с нуля - 150 рублей (в зависимости от сложности), Костюм - 75 рублей, Решейд - 100 рублей, Figura - от 200 рублей (в зависимости от сложности), Плащ (+элитры) - 75 рублей, Модель - от 75 рублей (в зависимости от сложности).'
+      }
+      // Можно добавлять больше карточек сюда 👆
+    ];
+
+    // ==========
+    // РЕНДЕР
+    // ==========
+    const grid = document.getElementById('grid');
+
+    function createMediaEl(item) {
+      const el = document.createElement(item.type === 'video' ? 'video' : 'img');
+      if (item.type === 'video') {
+        el.controls = true;
+        el.preload = 'metadata';
+        const source = document.createElement('source');
+        source.src = item.src;
+        source.type = 'video/mp4'; // при необходимости поменяй
+        el.appendChild(source);
+      } else {
+        el.src = item.src;
+        el.loading = 'lazy';
+        el.alt = '';
+      }
+      return el;
+    }
+
+    function renderCard({ title, link, media = [], description }) {
+      const card = document.createElement('article');
+      card.className = 'card';
+
+      // Title link
+      const a = document.createElement('a');
+      a.href = link || '#';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.className = 'title';
+      a.textContent = title || 'Без названия';
+
+      // Media block (supports multiple items via horizontal scroll)
+      let mediaBlock;
+      if (media.length > 1) {
+        const gallery = document.createElement('div');
+        gallery.className = 'gallery';
+        media.forEach(m => {
+          const wrap = document.createElement('div');
+          wrap.className = 'media';
+          wrap.appendChild(createMediaEl(m));
+          gallery.appendChild(wrap);
+        });
+        mediaBlock = gallery;
+      } else {
+        const wrap = document.createElement('div');
+        wrap.className = 'media';
+        if (media[0]) wrap.appendChild(createMediaEl(media[0]));
+        mediaBlock = wrap;
+      }
+
+      // Description
+      const p = document.createElement('p');
+      p.className = 'desc';
+      p.textContent = description || '';
+
+      card.append(a, mediaBlock, p);
+      return card;
+    }
+
+    function renderAll() {
+      grid.innerHTML = '';
+      items.forEach((it) => grid.appendChild(renderCard(it)));
+      observeCards();
+    }
+
+    // ==========
+    // АНИМАЦИЯ ПОЯВЛЕНИЯ
+    // ==========
+    let observer;
+    function observeCards() {
+      if (observer) observer.disconnect();
+      const options = { threshold: 0.18 };
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, options);
+      document.querySelectorAll('.card').forEach((el, i) => {
+        // Мягкая ступенчатая задержка появления
+        el.style.transitionDelay = `${(i % 6) * 80}ms`;
+        observer.observe(el);
+      });
+    }
+    // стартовый рендер
+    renderAll();
+  </script></body>
+</html>
